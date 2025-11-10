@@ -5,6 +5,8 @@ using WindowsGSM.Functions;
 using WindowsGSM.GameServer.Query;
 using WindowsGSM.GameServer.Engine;
 using System.IO;
+using System.Linq;
+using System.Text;
 
 namespace WindowsGSM.Plugins
 {
@@ -55,13 +57,38 @@ namespace WindowsGSM.Plugins
         public async void CreateServerCFG()
         {
             string configPath = Functions.ServerPath.GetServersServerFiles(serverData.ServerID, @"server properties.txt");
-            string configText = File.ReadAllText(configPath);
-            configText = configText.Replace("Default Session", serverData.ServerName);
-            configText = configText.Replace("27015", serverData.ServerPort);
-            configText = configText.Replace("27016", serverData.ServerQueryPort);
-            configText = configText.Replace("authentication token = ", "authentication token = "+serverData.ServerGSLT);
-            //configText = configText.Replace(serverData.ServerGSLT+serverData.ServerGSLT, serverData.ServerGSLT);
-            File.WriteAllText(configPath, configText);
+
+            var content = File.ReadAllLines(configPath);
+            StringBuilder sb = new StringBuilder();
+            foreach (var line in content)
+            {
+                if (line.StartsWith("steam game port ="))
+                {
+                    sb.Append($"steam game port = {serverData.ServerPort}");
+                }
+                else if (line.StartsWith("steam query port ="))
+                {
+                    sb.Append($"steam query port = {serverData.ServerQueryPort}");
+                }
+                else if (line.StartsWith("server name = "))
+                {
+                    sb.Append($"server name = {serverData.ServerName}");
+                }
+                else if (line.StartsWith("display name ="))
+                {
+                    sb.Append($"display name = {serverData.ServerName}");
+                }
+                //else if (line.StartsWith("authentication token ="))
+                //{
+                //    sb.Append($"authentication token = {serverData.ServerGSLT}"); 
+                //} //
+                else
+                {
+                    sb.Append(line);
+                }
+            }
+
+            File.WriteAllText(configPath, sb.ToString());
         }
 
         // - Start server function, return its Process to WindowsGSM
