@@ -64,27 +64,27 @@ namespace WindowsGSM.Plugins
             {
                 if (line.StartsWith("steam game port ="))
                 {
-                    sb.Append($"steam game port = {serverData.ServerPort}");
+                    sb.AppendLine($"steam game port = {serverData.ServerPort}");
                 }
                 else if (line.StartsWith("steam query port ="))
                 {
-                    sb.Append($"steam query port = {serverData.ServerQueryPort}");
+                    sb.AppendLine($"steam query port = {serverData.ServerQueryPort}");
                 }
                 else if (line.StartsWith("server name = "))
                 {
-                    sb.Append($"server name = {serverData.ServerName}");
+                    sb.AppendLine($"server name = {serverData.ServerName}");
                 }
                 else if (line.StartsWith("display name ="))
                 {
-                    sb.Append($"display name = {serverData.ServerName}");
+                    sb.AppendLine($"display name = {serverData.ServerName}");
                 }
-                //else if (line.StartsWith("authentication token ="))
-                //{
-                //    sb.Append($"authentication token = {serverData.ServerGSLT}"); 
-                //} //
+                else if (line.StartsWith("authentication token =")) 
+                {
+                    sb.Append($"authentication token = {serverData.ServerGSLT}"); 
+                }
                 else
                 {
-                    sb.Append(line);
+                    sb.AppendLine(line);
                 }
             }
 
@@ -101,13 +101,10 @@ namespace WindowsGSM.Plugins
                 return null;
             }
 
+            CreateServerCFG(); // add // at the start of this line if you don't want wgsm to update your config file 
+
             // Prepare start parameter
             string param = "-propertiesPath \"server properties.txt\"";
-            //param += $" {serverData.ServerParam}";
-            //param += string.IsNullOrWhiteSpace(serverData.ServerPort) ? string.Empty : $" -Port={serverData.ServerPort}"; 
-            //param += string.IsNullOrWhiteSpace(serverData.ServerQueryPort) ? string.Empty : $" -ServerQueryPort={serverData.ServerQueryPort}";
-            //param += string.IsNullOrWhiteSpace(serverData.ServerMaxPlayer) ? string.Empty : $" -MaxPlayers={serverData.ServerMaxPlayer}";
-            //param += string.IsNullOrWhiteSpace(serverData.ServerIP) ? string.Empty : $" -Multihome={serverData.ServerIP}";
 
             // Prepare Process
             var p = new Process
