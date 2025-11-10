@@ -80,7 +80,7 @@ namespace WindowsGSM.Plugins
                 }
                 else if (line.StartsWith("authentication token =")) 
                 {
-                    sb.Append($"authentication token = {serverData.ServerGSLT}"); 
+                    sb.AppendLine($"authentication token = {serverData.ServerGSLT}"); 
                 }
                 else
                 {
