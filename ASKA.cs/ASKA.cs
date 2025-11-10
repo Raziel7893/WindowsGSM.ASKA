@@ -54,23 +54,19 @@ namespace WindowsGSM.Plugins
         // - Create a default cfg for the game server after installation
         public async void CreateServerCFG()
         {
-            // Nothing
-        }
-
-        // - Start server function, return its Process to WindowsGSM
-        public async Task<Process> Start()
-        {
             string configPath = Functions.ServerPath.GetServersServerFiles(serverData.ServerID, @"server properties.txt");
-            {
             string configText = File.ReadAllText(configPath);
             configText = configText.Replace("Default Session", serverData.ServerName);
             configText = configText.Replace("27015", serverData.ServerPort);
             configText = configText.Replace("27016", serverData.ServerQueryPort);
             configText = configText.Replace("authentication token = ", "authentication token = "+serverData.ServerGSLT);
-            configText = configText.Replace(serverData.ServerGSLT+serverData.ServerGSLT, serverData.ServerGSLT);
+            //configText = configText.Replace(serverData.ServerGSLT+serverData.ServerGSLT, serverData.ServerGSLT);
             File.WriteAllText(configPath, configText);
-            }
+        }
 
+        // - Start server function, return its Process to WindowsGSM
+        public async Task<Process> Start()
+        {
             string shipExePath = Functions.ServerPath.GetServersServerFiles(serverData.ServerID, StartPath);
             if (!File.Exists(shipExePath))
             {
@@ -103,7 +99,7 @@ namespace WindowsGSM.Plugins
             p.StartInfo.EnvironmentVariables["SteamAppId"] = "1898300";
 
             // Set up Redirect Input and Output to WindowsGSM Console if EmbedConsole is on
-            if (AllowsEmbedConsole)
+            if (serverData.EmbedConsole)
             {
                 p.StartInfo.RedirectStandardInput = true;
                 p.StartInfo.RedirectStandardOutput = true;
@@ -119,7 +115,7 @@ namespace WindowsGSM.Plugins
             try
             {
                 p.Start();
-                if (AllowsEmbedConsole)
+                if (serverData.EmbedConsole)
                 {
                     p.BeginOutputReadLine();
                     p.BeginErrorReadLine();
