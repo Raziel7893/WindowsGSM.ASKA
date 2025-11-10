@@ -101,7 +101,12 @@ namespace WindowsGSM.Plugins
                 return null;
             }
 
+            if (string.IsNullOrWhiteSpace(serverData.ServerGSLT))
+            {
+                Error = "No Steam GSLT token found. Please set it by Clicking Edit Config in Windowsgsm";
+            }
             CreateServerCFG(); // add // at the start of this line if you don't want wgsm to update your config file 
+
 
             // Prepare start parameter
             string param = "-propertiesPath \"server properties.txt\"";
