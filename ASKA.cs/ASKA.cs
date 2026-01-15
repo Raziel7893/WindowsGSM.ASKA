@@ -80,7 +80,10 @@ namespace WindowsGSM.Plugins
                 }
                 else if (line.StartsWith("authentication token =")) 
                 {
-                    sb.AppendLine($"authentication token = {serverData.ServerGSLT}"); 
+                    if (!string.IsNullOrWhiteSpace(serverData.ServerGSLT))
+                    {
+                        sb.AppendLine($"authentication token = {serverData.ServerGSLT}");
+                    }
                 }
                 else
                 {
@@ -183,4 +186,5 @@ namespace WindowsGSM.Plugins
 
     }
 }
+
 
